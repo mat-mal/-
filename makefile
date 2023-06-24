@@ -23,7 +23,7 @@ $(PROG): $(OBJS)
 .PHONY: clean
 clean:
 	@echo [cleaning up]
-	del -f $(OBJS) $(PROG)
+	del -f $(OBJS) $(PROG).exe
 .PHONY: run
 run:
 	@echo [executing $(PROG)]

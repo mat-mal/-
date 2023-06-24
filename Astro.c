@@ -55,12 +55,17 @@ void GetLocation(Location* pLoc)
 		file = fopen("./localization.data", "r");
 		if(file == NULL)
 		{
+			char input[20];
 			fclose(file);
-			printf("\nEnter the coordinates of your current location (Example: 51 28 N 0 00 E)\n");
-			scanf(" %d %d %c %d %d %c", &lat_d, &lat_m, &lat, &lon_d, &lon_m, &lon);
+			printf("\nEnter the coordinates of your current location (Example: 51 28 N 0 00 E), Q to quit\n");
+			fgets(input, 20, stdin);
+			for(int i = 0; i < 20; i++)
+			{
+				input[i] = toupper(input[i]);
+			}
+			if(input[0] == 'Q') exit(0);
+			sscanf(input, " %d %d %c %d %d %c", &lat_d, &lat_m, &lat, &lon_d, &lon_m, &lon);
 			printf("\n");
-			lat = toupper(lat);
-			lon = toupper(lon);
 			if(lat == 'S')
 			{
 				lat_d = lat_d * (-1);
@@ -72,10 +77,11 @@ void GetLocation(Location* pLoc)
 			file = fopen("./localization.data", "w+");
 			fprintf(file, "%d %d %c %d %d %c", lat_d, lat_m, lat, lon_d, lon_m, lon);
 			rewind(file);
+			fflush(stdin);
 		}
 		
 		fscanf(file, " %d %d %c %d %d %c", &pLoc->lat_d, &pLoc->lat_m, &pLoc->lat, &pLoc->lon_d, &pLoc->lon_m, &pLoc->lon);
-		if((pLoc->lat != 'S' && pLoc->lat != 'N') || (pLoc->lon != 'W' && pLoc->lon != 'E') || pLoc->lat_d < 0 || pLoc->lat_d > 90 || pLoc->lon_d < 0 || pLoc->lon_d > 180 || pLoc->lat_m < 0 || pLoc->lat_m > 60 || pLoc->lon_m < 0 || pLoc->lon_m > 60)
+		if((pLoc->lat != 'S' && pLoc->lat != 'N') || (pLoc->lon != 'W' && pLoc->lon != 'E') || abs(pLoc->lat_d) < 0 || abs(pLoc->lat_d) > 90 || abs(pLoc->lon_d) < 0 || abs(pLoc->lon_d) > 180 || pLoc->lat_m < 0 || pLoc->lat_m > 60 || pLoc->lon_m < 0 || pLoc->lon_m > 60)
 		{
 			printf("ERROR! WRONG COORDINATES VALUE!\n");
 			printf("Coordinates must be in format XX MM N/S YY MM E/W\n");
